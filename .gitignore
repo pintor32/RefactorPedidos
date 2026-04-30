@@ -1,0 +1,20 @@
+# Backend
+backend-pedidos/target/
+backend-pedidos/.idea/
+backend-pedidos/*.iml
+
+# Frontend
+frontend-pedidos/node_modules/
+frontend-pedidos/dist/
+frontend-pedidos/.angular/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

@@ -1,0 +1,72 @@
+package com.curso.pedidos.entity;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+
+/**
+ * Entidad Pedido — Estado INICIAL del taller (con problemas).
+ *
+ * Esta clase contiene los problemas que vas a corregir paso a paso:
+ *  - FetchType.EAGER en relaciones (Paso 2)
+ *  - Campo numeroTarjeta expuesto al serializar (Paso 1: con DTO)
+ *  - Sin mecanismo para evitar ciclos en JSON (Paso 1: con DTO)
+ *
+ * NO modifiques esta clase hasta que el taller te indique en qué paso hacerlo.
+ */
+@Entity
+@Table(name = "pedidos")
+public class Pedido {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String numero;
+
+    @Column(name = "fecha_creacion")
+    private LocalDateTime fechaCreacion;
+
+    private BigDecimal total;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "cliente_id")
+    private Cliente cliente;
+
+    @OneToMany(mappedBy = "pedido", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnore  // Evita ciclo en serialización temporalmente, hasta que se cree el DTO
+    private List<LineaPedido> lineas;
+
+    @Column(name = "numero_tarjeta")
+    private String numeroTarjeta;
+
+    private String observaciones;
+
+    public Pedido() {}
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getNumero() { return numero; }
+    public void setNumero(String numero) { this.numero = numero; }
+
+    public LocalDateTime getFechaCreacion() { return fechaCreacion; }
+    public void setFechaCreacion(LocalDateTime fechaCreacion) { this.fechaCreacion = fechaCreacion; }
+
+    public BigDecimal getTotal() { return total; }
+    public void setTotal(BigDecimal total) { this.total = total; }
+
+    public Cliente getCliente() { return cliente; }
+    public void setCliente(Cliente cliente) { this.cliente = cliente; }
+
+    public List<LineaPedido> getLineas() { return lineas; }
+    public void setLineas(List<LineaPedido> lineas) { this.lineas = lineas; }
+
+    public String getNumeroTarjeta() { return numeroTarjeta; }
+    public void setNumeroTarjeta(String numeroTarjeta) { this.numeroTarjeta = numeroTarjeta; }
+
+    public String getObservaciones() { return observaciones; }
+    public void setObservaciones(String observaciones) { this.observaciones = observaciones; }
+}
