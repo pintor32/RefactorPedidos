@@ -1,13 +1,11 @@
 import { ApplicationConfig } from '@angular/core';
-import { provideHttpClient } from '@angular/common/http';
-
-/**
- * Configuración inicial de la aplicación.
- *
- * En el Paso 8 del taller vas a agregar el interceptor de errores aquí.
- */
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { errorInterceptor } from './interceptors/error.interceptor';
+ 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideHttpClient()
+    provideHttpClient(
+      withInterceptors([errorInterceptor])
+    )
   ]
 };
