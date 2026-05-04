@@ -1,5 +1,7 @@
 package com.curso.pedidos.entity;
 
+import com.curso.pedidos.dto.LineaPedidoDTO;
+import com.curso.pedidos.dto.PedidoDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
@@ -10,9 +12,9 @@ import java.util.List;
  * Entidad Pedido — Estado INICIAL del taller (con problemas).
  *
  * Esta clase contiene los problemas que vas a corregir paso a paso:
- *  - FetchType.EAGER en relaciones (Paso 2)
- *  - Campo numeroTarjeta expuesto al serializar (Paso 1: con DTO)
- *  - Sin mecanismo para evitar ciclos en JSON (Paso 1: con DTO)
+ * - FetchType.EAGER en relaciones (Paso 2)
+ * - Campo numeroTarjeta expuesto al serializar (Paso 1: con DTO)
+ * - Sin mecanismo para evitar ciclos en JSON (Paso 1: con DTO)
  *
  * NO modifiques esta clase hasta que el taller te indique en qué paso hacerlo.
  */
@@ -36,7 +38,7 @@ public class Pedido {
     private Cliente cliente;
 
     @OneToMany(mappedBy = "pedido", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JsonIgnore  // Evita ciclo en serialización temporalmente, hasta que se cree el DTO
+    @JsonIgnore // Evita ciclo en serialización temporalmente, hasta que se cree el DTO
     private List<LineaPedido> lineas;
 
     @Column(name = "numero_tarjeta")
@@ -44,29 +46,89 @@ public class Pedido {
 
     private String observaciones;
 
-    public Pedido() {}
+    public Pedido() {
+    }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getNumero() { return numero; }
-    public void setNumero(String numero) { this.numero = numero; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public LocalDateTime getFechaCreacion() { return fechaCreacion; }
-    public void setFechaCreacion(LocalDateTime fechaCreacion) { this.fechaCreacion = fechaCreacion; }
+    public String getNumero() {
+        return numero;
+    }
 
-    public BigDecimal getTotal() { return total; }
-    public void setTotal(BigDecimal total) { this.total = total; }
+    public void setNumero(String numero) {
+        this.numero = numero;
+    }
 
-    public Cliente getCliente() { return cliente; }
-    public void setCliente(Cliente cliente) { this.cliente = cliente; }
+    public LocalDateTime getFechaCreacion() {
+        return fechaCreacion;
+    }
 
-    public List<LineaPedido> getLineas() { return lineas; }
-    public void setLineas(List<LineaPedido> lineas) { this.lineas = lineas; }
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
 
-    public String getNumeroTarjeta() { return numeroTarjeta; }
-    public void setNumeroTarjeta(String numeroTarjeta) { this.numeroTarjeta = numeroTarjeta; }
+    public BigDecimal getTotal() {
+        return total;
+    }
 
-    public String getObservaciones() { return observaciones; }
-    public void setObservaciones(String observaciones) { this.observaciones = observaciones; }
+    public void setTotal(BigDecimal total) {
+        this.total = total;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public List<LineaPedido> getLineas() {
+        return lineas;
+    }
+
+    public void setLineas(List<LineaPedido> lineas) {
+        this.lineas = lineas;
+    }
+
+    public String getNumeroTarjeta() {
+        return numeroTarjeta;
+    }
+
+    public void setNumeroTarjeta(String numeroTarjeta) {
+        this.numeroTarjeta = numeroTarjeta;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
+    }
+
+    public PedidoDTO toDTO() {
+        return new PedidoDTO(
+                this.id,
+                this.numero,
+                this.fechaCreacion,
+                this.total,
+                this.cliente != null ? this.cliente.getNombre() : null,
+                this.lineas != null
+                        ? this.lineas.stream()
+                                .map(l -> new LineaPedidoDTO(
+                                        l.getId(),
+                                        l.getDescripcion(),
+                                        l.getCantidad(),
+                                        l.getPrecioUnitario()))
+                                .toList()
+                        : List.of());
+    }
+
 }
