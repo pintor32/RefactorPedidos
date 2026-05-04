@@ -8,16 +8,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * Entidad Pedido — Estado INICIAL del taller (con problemas).
- *
- * Esta clase contiene los problemas que vas a corregir paso a paso:
- * - FetchType.EAGER en relaciones (Paso 2)
- * - Campo numeroTarjeta expuesto al serializar (Paso 1: con DTO)
- * - Sin mecanismo para evitar ciclos en JSON (Paso 1: con DTO)
- *
- * NO modifiques esta clase hasta que el taller te indique en qué paso hacerlo.
- */
 @Entity
 @Table(name = "pedidos")
 public class Pedido {
@@ -33,11 +23,11 @@ public class Pedido {
 
     private BigDecimal total;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
-    @OneToMany(mappedBy = "pedido", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "pedido", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore // Evita ciclo en serialización temporalmente, hasta que se cree el DTO
     private List<LineaPedido> lineas;
 
